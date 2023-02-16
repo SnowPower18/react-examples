@@ -20,6 +20,9 @@ const Home: NextPage = () => {
   const [theme, setTheme] = useState<Theme>();
   //used to remove remove listener when changing from sys to another mode
   const prevTheme = useRef<Theme>();
+  //needed because events on MediaQueryLists can be removed only
+  //using the object on which they were created
+  const darkModeMedia = useRef<MediaQueryList>();
 
   function themeListener(e: MediaQueryListEvent) {
     if (e.matches) {
@@ -34,20 +37,28 @@ const Home: NextPage = () => {
     if (theme == undefined) {
       setTheme(getSavedTheme());
     }
+    if (darkModeMedia.current == undefined) {
+      darkModeMedia.current = window.matchMedia("(prefers-color-scheme: dark)");
+    }
   }, []);
 
   useEffect(() => {
+    if (darkModeMedia.current == undefined) {
+      darkModeMedia.current = window.matchMedia("(prefers-color-scheme: dark)");
+    }
     //remove old media listener
     if (prevTheme.current === "sys")
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .removeEventListener("change", themeListener);
+      darkModeMedia.current.removeEventListener("change", themeListener);
 
     //add or remove 'dark' class on html tag
     if (theme === "sys") {
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", themeListener);
+      //update theme to system theme
+      if (darkModeMedia.current.matches)
+        document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
+
+      //add media listener
+      darkModeMedia.current.addEventListener("change", themeListener);
       localStorage.setItem("theme", "sys");
     } else if (theme === "dark") {
       document.documentElement.classList.add("dark");
@@ -60,10 +71,8 @@ const Home: NextPage = () => {
     prevTheme.current = theme;
 
     return () => {
-      if (theme === "sys")
-        window
-          .matchMedia("(prefers-color-scheme: dark)")
-          .removeEventListener("change", themeListener);
+      if (theme === "sys" && darkModeMedia.current != undefined)
+        darkModeMedia.current.removeEventListener("change", themeListener);
     };
   }, [theme]);
 
