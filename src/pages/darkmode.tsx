@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { HiDesktopComputer, HiMoon, HiSun } from "react-icons/hi";
 
@@ -77,32 +78,39 @@ const Home: NextPage = () => {
   }, [theme]);
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center bg-slate-300 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
-      <nav className="flex w-screen items-center bg-slate-400 p-4 dark:bg-slate-700">
-        <h2 className="mr-auto ml-2 text-2xl font-semibold">
-          DarkMode Example
-        </h2>
-        <ThemeSwitcher theme={theme} setTheme={setTheme} />
-      </nav>
-      <div className="w-1/2 pt-12">
-        <p className="text-lg">
-          This is an example of a theme switcher with Dark, Light and System
-          mode that also persists preferences in localStorage. It makes use of
-          the dark mode implemented by Tailwind CSS and event listeners of the{" "}
-          <span className="rounded-md bg-slate-400/30">
-            `prefers-color-scheme`
-          </span>{" "}
-          media query in order implement the System mode.
-        </p>
-        <p className="text-lg">
-          For this example to work the{" "}
-          <span className="rounded-md bg-slate-400/30">
-            `darkMode: 'class'`
-          </span>{" "}
-          option has to be added in the Tailwind config.
-        </p>
+    <>
+      <Head>
+        <title>React Examples</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      </Head>
+      <div className="flex min-h-screen w-screen flex-col items-center bg-slate-300 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
+        <nav className="flex w-screen items-center bg-slate-400 p-4 dark:bg-slate-700">
+          <h2 className="mr-auto ml-2 text-2xl font-semibold">
+            DarkMode Example
+          </h2>
+          <ThemeSwitcher theme={theme} setTheme={setTheme} />
+        </nav>
+        <div className="w-1/2 pt-12">
+          <p className="text-lg">
+            This is an example of a theme switcher with Dark, Light and System
+            mode that also persists preferences in localStorage. It makes use of
+            the dark mode implemented by Tailwind CSS and event listeners of the{" "}
+            <span className="rounded-md bg-slate-400/30">
+              `prefers-color-scheme`
+            </span>{" "}
+            media query in order implement the System mode.
+          </p>
+          <p className="text-lg">
+            For this example to work the{" "}
+            <span className="rounded-md bg-slate-400/30">
+              `darkMode: 'class'`
+            </span>{" "}
+            option has to be added in the Tailwind config.
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
